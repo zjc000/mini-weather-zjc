@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -19,7 +22,7 @@ import cn.edu.pku.zhangjc.bean.City;
 public class SelectCity extends Activity implements View.OnClickListener {
     private ImageView mBackBtn;
     private ListView mList;
-
+    private EditText mSearch;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +46,7 @@ public class SelectCity extends Activity implements View.OnClickListener {
         for (City city:cityList) {
             cityName.add(city.getCity());
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(SelectCity.this, android.R.layout.simple_list_item_1, cityName);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(SelectCity.this, android.R.layout.simple_list_item_1, cityName);
         ListView listView = (ListView) findViewById(R.id.title_list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -55,6 +58,25 @@ public class SelectCity extends Activity implements View.OnClickListener {
                 intent.putExtra("cityCode",cityCode);//传递给下一个Activity的值
                 setResult(RESULT_OK, intent);
                 finish();
+            }
+        });
+        mSearch = findViewById(R.id.search_city);
+        mSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                adapter.getFilter().filter(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+
             }
         });
     }
